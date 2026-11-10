@@ -1,0 +1,50 @@
+# Quantum CI/CD on every pull request (US-016). A FAIL result or an analysis error fails this job; a required status
+# check on the job blocks the merge. The tool comes from a separate checkout of its private repository, pinned to a
+# commit, with a read-only token kept as an encrypted Actions secret (Q8). The token is not passed to the tool.
+name: quantum-ci
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Quantum circuit analysis
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: apeirohedra/quantum-ci
+          ref: 33642ee401d70040588ec8661eaaf3378e216360
+          path: tool
+          token: ${{ secrets.QUANTUM_CI_TOOL_TOKEN }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.8"
+
+      # A baseline is compatible only with the Qiskit version that created it (`qiskit_version` in the baseline).
+      - name: Install the tool
+        run: python -m pip install --disable-pip-version-check ./tool "qiskit==2.5.2"
+
+      # The JSON report goes to the log and to a file. With `shell: bash` (pipefail) tee keeps the exit code.
+      - name: Analyze circuits
+        shell: bash
+        run: quantum-ci analyze --format json | tee quantum-ci-report.json
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quantum-ci-report
+          path: quantum-ci-report.json
+          retention-days: 14
+          if-no-files-found: error
