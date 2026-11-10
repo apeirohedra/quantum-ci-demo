@@ -1,0 +1,24 @@
+# Quantum CI/CD configuration of the demo project: structural rules, a gate budget and a depth regression rule.
+
+[normalization]
+basis_gates = ["cx", "rz", "sx", "x"]
+
+[circuits.bell]
+entry_point = "circuits:bell"
+require_measurements = true
+
+[circuits.ghz]
+entry_point = "circuits:ghz"
+require_measurements = true
+
+[rules.B-GATES]
+group = "budget"
+metric = "gate_count"
+max_value = 50
+severity = "FAIL"
+
+[rules.R-DEPTH]
+group = "regression"
+metric = "depth"
+threshold_absolute = 0
+severity = "FAIL"

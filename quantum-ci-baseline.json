@@ -1,0 +1,36 @@
+{
+  "schema_version": "1",
+  "analysis_version": "1",
+  "tool_version": "0.1.0.dev0",
+  "qiskit_version": "2.5.2",
+  "normalization": {
+    "basis_gates": [
+      "cx",
+      "rz",
+      "sx",
+      "x"
+    ],
+    "optimization_level": 0,
+    "seed": 1234
+  },
+  "entries": [
+    {
+      "circuit_name": "bell",
+      "metrics": {
+        "num_qubits": 2,
+        "depth": 5,
+        "gate_count": 4,
+        "two_qubit_gate_count": 1
+      }
+    },
+    {
+      "circuit_name": "ghz",
+      "metrics": {
+        "num_qubits": 3,
+        "depth": 6,
+        "gate_count": 5,
+        "two_qubit_gate_count": 2
+      }
+    }
+  ]
+}
