@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: apeirohedra/quantum-ci
-          ref: 33642ee401d70040588ec8661eaaf3378e216360
+          ref: efa4a8a63e3861d1877fcc47cee0ca787050fd8b
           path: tool
           token: ${{ secrets.QUANTUM_CI_TOOL_TOKEN }}
           persist-credentials: false
